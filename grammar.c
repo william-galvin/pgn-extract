@@ -1159,7 +1159,9 @@ deal_with_game(Move *move_list, unsigned long start_line, unsigned long end_line
         check_tag_details_not_ECO(current_game.tags, current_game.tags_length, TRUE) &&
         check_setup_tag(current_game.tags) &&
         check_duplicate_setup(&current_game) &&
+
         apply_move_list(&current_game, &plycount, GlobalState.depth_of_positional_search, TRUE) &&
+
         check_move_bounds(plycount) &&
         check_textual_variations(&current_game) &&
         check_for_material_match(&current_game) &&

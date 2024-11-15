@@ -18,7 +18,7 @@
   <div id="banner">
 <h1><a href="https://www.cs.kent.ac.uk/~djb/pgn-extract">pgn-extract</a>:<br />
 A Portable Game Notation (PGN) Manipulator for Chess Games<br />
-Version 24-12 by
+Version 24-14 by
 <a href="https://www.cs.kent.ac.uk/~djb/">David J. Barnes</a></h1>
   </div>
 </div>
@@ -85,11 +85,11 @@ the binary working, there is <a href="https://www.cs.kent.ac.uk/~djb/pgn-extract
                         (--fenpattern and --fenpatterni)</a>
             <li><a href="#-H">polyglot hashcode matches (-H)</a>
             </ul>
-	<li><a href="#variations">Variations (-H, -x, -v and -P)</a>:
+	<li><a href="#variations">Variations (-H, -x, -v, --vanywhere and -P)</a>:
 	    <ul>
 		<li><a href="#-H">Polyglot hashcode matches (-H)</a>
 		<li><a href="#-x">Positional variations (-x)</a>
-		<li><a href="#-v">Textual variations (-v)</a>
+		<li><a href="#-v">Textual variations (-v and --vanywhere)</a>
 		<li><a href="#-P">Textual variation permutations (-P)</a>
 	    </ul>
 	<li><a href="#-t">Tag-matching criteria:</a>
@@ -405,6 +405,7 @@ of this page before attempting to use pgn-extract in earnest.
       <li>--tagsubstr - match in any part of a tag (see <a href="#-T">-T</a> and <a href="#-t">-t</a>).
       <li>--totalplycount - include a tag with the total number of plies in a game.
       <li>--version - print current version number and exit.
+      <li>--vanywhere - apply variation matching (-v) through the whole game.
       <li>--wtm - match position only if White is to move (see -t)
       <li>--xroster - don't output tags not included with the -R option (see <a href="#-R">-R</a>).
 </ul>
@@ -535,11 +536,11 @@ data is being checked and cleaned.
 <p>A log file will contain only error reports if the <a href="#-s">-s</a> 
 (silent) flag is used.
 
-<h2 id="variations">Variations (-H, -x, -v and -P)</h2>
+<h2 id="variations">Variations (-H, -x, -v, --vanywhere and -P)</h2>
 <p>There are multiple ways to identify opening variations of interest:
 using a Polglot hashcode (<a href="#-H">the -H flag </a>),
 via move sequences reaching a particular position (the <a href="#-x">-x</a> flag) and
-textually-specific move sequences (the <a href="#-v">-v</a> and <a href="#-P">-P</a> flags).
+textually-specific move sequences (the <a href="#-v">-v, --vanywhere</a> and <a href="#-P">-P</a> flags).
 <p>
 The major difference between -x and -v is that positional variations (-x)
 specify a complete move sequence whose end position is the primary
@@ -604,12 +605,16 @@ and <a href="#-F">the -F flag</a>
 for a simple way to generate a FEN description from
 a game score.
 
-<li id="-v">Textual Variations (-v)
-<p>With this option, the matching is purely textual in nature,
+<li id="-v">Textual Variations (-v and --vanywhere)
+<p>With the -v option, the matching is purely textual in nature,
 in contrast to the <a href="#-x">-x</a> flag.  The -v flag works by
 string matching on the input text of moves,
 so there is no facility for picking up transpositions automatically.
-The variations in which you are interested should be placed in a file
+By default, the matching is only applied at the start of a game.
+However, if the --vanywhere option is added, the matching is attempted
+throughout the whole game. This allows for move sequence 'themes' to be
+found, for instance.
+<p>The variations in which you are interested should be placed in a file
 whose name is supplied with the -v flag. For instance:
 <pre>
 pgn-extract -vvars
@@ -739,7 +744,7 @@ permutations.
 This allows hashcode (<a href="#-H">-H</a>) and FENPattern matches
 (<a href="#FENPattern-t">-Tf</a>) to be
 limited to the start of a game, for instance.
-For instance:
+The following example
 <pre>
 pgn-extract -Hcdd6cd2d4e4045e --matchplylimit 12 games.pgn
 </pre>
@@ -2498,8 +2503,8 @@ or via
 <p>Copyright (C) 1994-2024 David J. Barnes<br />
 <a href="mailto:d.j.barnes@kent.ac.uk">d.j.barnes@kent.ac.uk</a><br />
 <a href="https://www.cs.kent.ac.uk/~djb/">https://www.cs.kent.ac.uk/~djb/</a><br />
-Date of this version: 8th November 2024<br>
-Version Number: 24-13<br>
+Date of this version: 15th November 2024<br>
+Version Number: 24-14<br>
 </address>
   </div>
 </div>

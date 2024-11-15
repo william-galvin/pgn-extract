@@ -70,7 +70,7 @@ static void append_hashcode_comment(Move *move_details, Board *board);
 static double evaluate(const Board *board);
 static double shannonEvaluation(const Board *board);
 static void print_board(const Board *board, FILE *outfp);
-static StringList * find_matching_comment(const char *comment_pattern,
+static StringList *find_matching_comment(const char *comment_pattern,
                                           const CommentList *comment);
 
 /* The English SAN piece characters. These are

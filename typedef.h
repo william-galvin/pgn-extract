@@ -393,6 +393,10 @@ typedef struct {
     Boolean lichess_comment_fix;
     /* Only match games with at least one comment. */
     Boolean keep_only_commented_games;
+    /* Whether variation matches should be tried from any point
+     * in a game.
+     */
+    Boolean variation_match_anywhere;
     
     /* The depth limit for splitting variations.
      * 0 => no limit.

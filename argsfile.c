@@ -41,7 +41,7 @@
 #include "mymalloc.h"
 #include "fenmatcher.h"
 
-#define CURRENT_VERSION "v24-13"
+#define CURRENT_VERSION "v24-14"
 #define URL "https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/"
 
 /* The prefix of the arguments allowed in an argsfile.
@@ -272,6 +272,7 @@ usage_and_exit(void)
         "--totalplycount - include a tag with the total number of plies in a game.",
         "--underpromotion - match only games that contain an underpromotion.",
         "--version - print the current version number and exit.",
+        "--vanywhere - apply variation matching (-v) through the whole game.",
 	"--wtm - match position only if White is to move (see -t)",
         "--xroster - don't output tags not included with the -R option (see -R).",
 
@@ -1749,6 +1750,10 @@ process_long_form_argument(const char *argument, const char *associated_value)
     }
     else if (stringcompare(argument, "underpromotion") == 0) {
         GlobalState.match_underpromotion = TRUE;
+        return 1;
+    }
+    else if (stringcompare(argument, "vanywhere") == 0) {
+        GlobalState.variation_match_anywhere = TRUE;
         return 1;
     }
     else if (stringcompare(argument, "version") == 0) {

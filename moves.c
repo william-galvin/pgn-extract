@@ -274,12 +274,12 @@ compose_positional_variation(char *line)
     char *move;
     /* Build a linked list of the moves of the variation. */
     Move *head = NULL, *tail = NULL;
-    Boolean Ok = TRUE;
+    Boolean ok = TRUE;
     /* Keep track of the ply depth. */
     unsigned depth = 0;
 
     move = strtok(line, " ");
-    while (Ok && (move != NULL) && (*move != '*')) {
+    while (ok && (move != NULL) && (*move != '*')) {
         if ((move = strip_move_number(move)) == NULL) {
             /* Only a move number. */
         }
@@ -288,7 +288,7 @@ compose_positional_variation(char *line)
 
             if (next == NULL) {
                 fprintf(GlobalState.logfile, "Failed to identify %s\n", move);
-                Ok = FALSE;
+                ok = FALSE;
             }
             else {
                 /* Chain it on to the list. */
@@ -307,7 +307,7 @@ compose_positional_variation(char *line)
         /* Pick up the next likely move. */
         move = strtok(NULL, " ");
     }
-    if (Ok) {
+    if (ok) {
         /* Determine whether the depth of this variation exceeds
          * the current default.
          * Depth is counted in ply.
@@ -777,19 +777,53 @@ check_textual_variations(const Game *game_details)
     variation_list *variation;
 
     if (games_to_keep != NULL) {
-        for (variation = games_to_keep; (variation != NULL) && !wanted;
-                variation = variation->next) {
-            if (GlobalState.match_permutations) {
-                wanted = permutation_match(game_details->moves, *variation);
+        unsigned game_length = 0;
+        if(GlobalState.variation_match_anywhere) {
+            /* Allow for the starting point of a match to be anywhere
+             * within the game.
+             */
+            for(Move *move = game_details->moves; move != NULL; move = move->next) {
+                game_length++;
             }
-            else {
-                wanted = straight_match(game_details->moves, *variation);
+            Move *game_position = game_details->moves;
+            unsigned moves_left = game_length;
+            Boolean variation_left = TRUE;
+            while(! wanted && game_position != NULL && variation_left) {
+                variation_left = FALSE;
+                for(variation = games_to_keep; (variation != NULL) && !wanted;
+                        variation = variation->next) {
+                    if(variation->length <= moves_left) {
+                        variation_left = TRUE;
+                        if (GlobalState.match_permutations) {
+                            wanted = permutation_match(game_position, *variation);
+                        }
+                        else {
+                            wanted = straight_match(game_position, *variation);
+                        }
+                    }
+                }
+                if(! wanted) {
+                    game_position = game_position->next;
+                    moves_left--;
+                }
+            }
+        }
+        else {
+            /* Only match from the start of the game. */
+            for (variation = games_to_keep; (variation != NULL) && !wanted;
+                    variation = variation->next) {
+                if (GlobalState.match_permutations) {
+                    wanted = permutation_match(game_details->moves, *variation);
+                }
+                else {
+                    wanted = straight_match(game_details->moves, *variation);
+                }
             }
         }
     }
     else {
-        /* There are no variations, assume that selection is done
-         * on the basis of the Details.
+        /* There are no variations, assume that selection is
+         * based on other criteria.
          */
         wanted = TRUE;
     }

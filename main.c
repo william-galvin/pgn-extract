@@ -134,6 +134,7 @@ StateInfo GlobalState = {
     FALSE,              /* delete_same_setup (--deletesamesetup) */
     FALSE,              /* lichess_comment_fix (--lichesscommentfix) */
     FALSE,              /* keep_only_commented_games (--only_commented_games) */
+    FALSE,              /* variation_match_anywhere (--anywhere) */
     0,                  /* split_depth_limit */
     NORMALFILE,         /* current_file_type */
     SETUP_TAG_OK,       /* setup_status */
