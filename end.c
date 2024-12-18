@@ -51,6 +51,8 @@ static Material_details *endings_to_match = NULL;
 /* Define pseudo-letter for minor pieces, used later. */
 #define MINOR_PIECE 'L'
 
+static Boolean opposite_colour_bishops(const Board *board);
+
 static Piece
 is_English_piece(char c)
 {
@@ -791,5 +793,49 @@ insufficient_material(const Board *board)
        (num_pieces[1][KNIGHT] >= 2 && (num_pieces[0][BISHOP] != 0 || num_pieces[0][KNIGHT] != 0))) {
         return FALSE;
     }
+    if(num_pieces[0][BISHOP] == 1 && num_pieces[1][BISHOP] == 1) {
+        if(opposite_colour_bishops(board)) {
+            return FALSE;
+        }
+    }
     return TRUE;
+}
+
+/* board has just two bishops (plus kings). Determine whether they
+ * are on opposite colour squares.
+ */
+static Boolean
+opposite_colour_bishops(const Board *board)
+{
+
+    int r1 = -1, c1 = -1, r2 = -1, c2 = -1;
+    for(char rank = FIRSTRANK; rank <= LASTRANK; rank++) {
+        for(char col = FIRSTCOL; col <= LASTCOL; col++) {
+            int r = RankConvert(rank);
+            int c = ColConvert(col);
+
+            Piece coloured_piece = board->board[r][c];
+            if(coloured_piece != EMPTY) {
+                int p = EXTRACT_PIECE(coloured_piece);
+                if(p == BISHOP) {
+                    if(r1 == -1) {
+                        r1 = r;
+                        c1 = c;
+                    }
+                    else {
+                        r2 = r;
+                        c2 = c;
+                    }
+                }
+            }
+        }
+    }
+    if(r2 == -1) {
+        fprintf(GlobalState.logfile, "Internal error: failed to find two bishops in opposite_colour_bishops.\n");
+        exit(1);
+    }
+    else {
+        /* Check for odd parity. */
+        return (abs(r1 - r2) + abs(c1 - c2)) % 2 == 1;
+    }
 }
