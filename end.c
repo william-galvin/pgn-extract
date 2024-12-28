@@ -517,7 +517,7 @@ material_match(Material_details *details_to_find, int num_pieces[2][NUM_PIECE_VA
 }
 
 /* Extract the numbers of each type of piece from the given board. */
-static void extract_pieces_from_board(int num_pieces[2][NUM_PIECE_VALUES], const Board *board)
+void extract_pieces_from_board(int num_pieces[2][NUM_PIECE_VALUES], const Board *board)
 {
     /* Set up num_pieces from the board. */
     for(int c = 0; c < 2; c++) {

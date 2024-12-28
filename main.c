@@ -96,6 +96,7 @@ StateInfo GlobalState = {
     FALSE,              /* suppress_matched (--suppressmatched) */
     FALSE,              /* higher_rated_winner (--higherratedwinner) */
     FALSE,              /* lower_rated_winner (--lowerratedwinner) */
+    FALSE,              /* find_odds_games (--odds) */
     0,                  /* depth_of_positional_search */
     0,                  /* num_games_processed */
     0,                  /* num_games_matched */

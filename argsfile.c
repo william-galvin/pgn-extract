@@ -41,7 +41,7 @@
 #include "mymalloc.h"
 #include "fenmatcher.h"
 
-#define CURRENT_VERSION "v24-15"
+#define CURRENT_VERSION "v24-16"
 #define URL "https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/"
 
 /* The prefix of the arguments allowed in an argsfile.
@@ -251,6 +251,7 @@ usage_and_exit(void)
         "--notags - don't output any tags.",
         "--nounique - see -U",
         "--novars - see -V",
+        "--odds - only match games played at odds.",
         "--onlysetuptags - only match games with a SetUp tag.",
         "--output - see -o",
         "--plycount - include a PlyCount tag.",
@@ -1511,6 +1512,10 @@ process_long_form_argument(const char *argument, const char *associated_value)
     }
     else if (stringcompare(argument, "novars") == 0) {
         process_argument(DONT_KEEP_VARIATIONS_ARGUMENT, "");
+        return 1;
+    }
+    else if (stringcompare(argument, "odds") == 0) {
+        GlobalState.find_odds_games = TRUE;
         return 1;
     }
     else if (stringcompare(argument, "onlysetuptags") == 0) {

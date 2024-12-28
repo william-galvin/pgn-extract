@@ -18,7 +18,7 @@
   <div id="banner">
 <h1><a href="https://www.cs.kent.ac.uk/~djb/pgn-extract">pgn-extract</a>:<br />
 A Portable Game Notation (PGN) Manipulator for Chess Games<br />
-Version 24-15 by
+Version 24-16 by
 <a href="https://www.cs.kent.ac.uk/~djb/">David J. Barnes</a></h1>
   </div>
 </div>
@@ -122,6 +122,7 @@ the binary working, there is <a href="https://www.cs.kent.ac.uk/~djb/pgn-extract
 	    </ul>
         <li><a href="#commented">Only match games with at least one comment (--commented)</a>
 	<li><a href="#-z">Material matches (-y, -z, --materialy, --materialz and --addmatchtag)</a>
+        <li><a href="#odds>Match games played at odds (--odds)</a>
         <li><a href="#-n">Output games not matched (-n)</a>
 	</ul>
     <li>Duplicate detection:
@@ -2138,6 +2139,18 @@ This example looks for double-Rook and pawn games that last at least
 </pre>
 </ul>
 
+<h2 id="odds">Match games played at odds (--odds)</h2>",
+<p>The --odds flag attempts to recognise games played at odds.
+The following criteria are used to identify odds games:
+<ul>
+    <li><p>The game includes a FEN tag.
+    <li><p>The FEN tag indicates that it is move number 1 and White to move.
+    <li><p>There are no pieces on the 3rd, 4th, 5th and 6th ranks.
+    <li><p>There is a material imbalance between White and Black.
+</ul>
+<p>Note that the criteria will fail to match games where the odds are material and a number
+of moves, for instance.
+
 <h2 id="-7">The Seven Tag Roster (-7 or --seven)</h2>
 <p>This flag discards tag pairs that are not part of the Seven Tag
 Roster:
@@ -2503,8 +2516,8 @@ or via
 <p>Copyright (C) 1994-2024 David J. Barnes<br />
 <a href="mailto:d.j.barnes@kent.ac.uk">d.j.barnes@kent.ac.uk</a><br />
 <a href="https://www.cs.kent.ac.uk/~djb/">https://www.cs.kent.ac.uk/~djb/</a><br />
-Date of this version: 18th December 2024<br>
-Version Number: 24-15<br>
+Date of this version: 28th December 2024<br>
+Version Number: 24-16<br>
 </address>
   </div>
 </div>

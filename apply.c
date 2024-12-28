@@ -42,6 +42,7 @@
 #include "hashing.h"
 #include "fenmatcher.h"
 #include "zobrist.h"
+#include "end.h"
 
 /* Define a positional search depth that should look at the
  * full length of a game.  This is used in play_moves().

@@ -302,6 +302,8 @@ typedef struct {
     Boolean higher_rated_winner;
     /* Whether the winner must be rated lower. */
     Boolean lower_rated_winner;
+    /* Find games played at odds. */
+    Boolean find_odds_games;
     
     /* Maximum ply depth to search for positional variations (-x).
      * This is picked up from the length of variations in the positional

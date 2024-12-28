@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <regex.h>
 #include "bool.h"
 #include "mymalloc.h"
 #include "defs.h"
@@ -81,6 +82,7 @@ static void setup_for_new_game(void);
 static CommentList *append_comment(CommentList *item, CommentList *list);
 static void check_result(char **Tags, const char *terminating_result);
 static Boolean check_for_comments(const Game *game);
+static Boolean check_for_odds(const Game *game);
 static Boolean chess960_setup(Board *board);
 static void deal_with_ECO_line(Move *move_list);
 static void deal_with_game(Move *move_list, unsigned long start_line, unsigned long end_line);
@@ -241,6 +243,58 @@ check_for_comments(const Game *game)
         }
         else {
             return comments_in_move_list(game->moves);
+        }
+    }
+    else {
+        return TRUE;
+    }
+}
+
+/* Check whether the game appears to have been played at odds.
+ * The assumption is that all pieces are on the first two ranks
+ * and one side has different pieces from the other.
+ */
+static Boolean
+check_for_odds(const Game *game)
+{
+    if(GlobalState.find_odds_games) {
+        if(game->tags[FEN_TAG] != NULL) {
+            regex_t regex;
+
+            /* Make sure the middle 8 ranks are empty. */
+            const char *empty_ranks = "^[^/]*/[^/]*/8/8/8/8/";
+            if(regcomp(&regex, empty_ranks, 0)  == 0) {
+                if(regexec(&regex, game->tags[FEN_TAG], 0, NULL, 0) != 0) {
+                    return FALSE;
+                }
+            }
+            else {
+                return FALSE;
+            }
+            regfree(&regex);
+            Boolean odds = FALSE;
+            /* Compare the piece numbers and types for look for a mismatch. */
+            Board *board = new_fen_board(game->tags[FEN_TAG]);
+            if(board->move_number == 1 && board->to_move == WHITE) {
+                /* Find the number of pieces for each player. */
+                int num_pieces[2][NUM_PIECE_VALUES] = {
+                    /* Dummies for OFF and EMPTY at the start. */
+                    /*     P  N  B  R  Q  K */
+                    {0, 0, 8, 2, 2, 2, 1, 1},
+                    {0, 0, 8, 2, 2, 2, 1, 1}
+                };
+                extract_pieces_from_board(num_pieces, board);
+                for(int p = PAWN; p <= QUEEN && !odds; p++) {
+                    if(num_pieces[0][p] != num_pieces[1][p]) {
+                        odds = TRUE;
+                    }
+                }
+            }
+            free_board(board);
+            return odds;
+        }
+        else {
+            return FALSE;
         }
     }
     else {
@@ -1163,6 +1217,7 @@ deal_with_game(Move *move_list, unsigned long start_line, unsigned long end_line
         apply_move_list(&current_game, &plycount, GlobalState.depth_of_positional_search, TRUE) &&
 
         check_move_bounds(plycount) &&
+        check_for_odds(&current_game) &&
         check_textual_variations(&current_game) &&
         check_for_material_match(&current_game) &&
         check_for_only_checkmate(&current_game) &&

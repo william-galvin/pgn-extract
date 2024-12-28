@@ -64,6 +64,7 @@ typedef struct material_details {
 Boolean build_endings(const char *infile, Boolean both_colours);
 Boolean check_for_material_match(Game *game);
 Boolean constraint_material_match(Material_details *details_to_find, const Board *board);
+void extract_pieces_from_board(int num_pieces[2][NUM_PIECE_VALUES], const Board *board);
 Boolean insufficient_material(const Board *board);
 Material_details *process_material_description(const char *line, Boolean both_colours, Boolean pattern_constraint);
 

@@ -47,7 +47,7 @@ all: no-flags-1 no-flags-2 test-7 test-append test-AA test-b test-p \
      test-skipmatching test-splitvariants test-nobadresults test-allownullmoves \
      test-matchplylimit test-nestedcomments test-FENPattern test-dropply \
      test-startply test-linenumbers test-seventyfive test-elodiff test-suppressmatched \
-     test-reltags test-ratedwins
+     test-reltags test-ratedwins test-odds
 
 # BEWARE: This removes all PGN files in the current directory.
 # The required test PGN files are assumed to be in $(INPUT).
@@ -998,3 +998,8 @@ test-ratedwins:
 	$(CMP) test-higherratedwins-out.pgn $(OUTPUT)$(SEP)test-higherratedwins-out.pgn
 	$(PGN_EXTRACT) --quiet --lowerratedwinner infiles/bots.pgn -o test-lowerratedwins-out.pgn
 	$(CMP) test-lowerratedwins-out.pgn $(OUTPUT)$(SEP)test-lowerratedwins-out.pgn
+
+test-odds:
+	echo "test-odds:"
+	$(PGN_EXTRACT) --quiet --odds --allownullmoves infiles/odds.pgn -o odds-out.pgn
+	$(CMP) odds-out.pgn $(OUTPUT)$(SEP)odds-out.pgn
