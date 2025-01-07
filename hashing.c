@@ -39,6 +39,7 @@
 #include "lex.h"
 #include "hashing.h"
 #include "zobrist.h"
+#include "apply.h"
 
 /* Routines, similar in nature to those in apply.c
  * to implement a duplicate hash-table lookup using
@@ -154,7 +155,7 @@ encode_castling_rights(const Board *board)
  *     + Same player to move.
  */
 static Boolean
-position_matches(PositionCount *entry, const Board *board)
+repetition_position_matches(PositionCount *entry, const Board *board)
 {
     if(board->weak_hash_value != entry->hash_value) {
         return FALSE;
@@ -166,7 +167,7 @@ position_matches(PositionCount *entry, const Board *board)
         return FALSE;
     }
     else {
-        if(board->EnPassant) {
+        if(board->EnPassant && ! ep_is_redundant(board)) {
             return board->ep_rank == entry->ep_rank && board->ep_col == entry->ep_col;
         }
         else {
@@ -174,6 +175,8 @@ position_matches(PositionCount *entry, const Board *board)
         }
     }
 }
+
+char *get_FEN_string(const Board *);
 
 /*
  * Add hash_value as a position in the current game.
@@ -183,14 +186,13 @@ position_matches(PositionCount *entry, const Board *board)
 unsigned
 update_position_counts(PositionCount *position_counts, const Board *board)
 {
-    //fprintf(stderr, "U: %d,%d\n", board->ep_rank, board->ep_col);
     PositionCount *entry = position_counts;
     if (position_counts == NULL) {
         /* Don't try to match in variations. */
         return 0;
     }
     /* Try to find an existing entry. */
-    while (entry != NULL && !position_matches(entry, board)) {
+    while (entry != NULL && !repetition_position_matches(entry, board)) {
         entry = entry->next;
     }
     if (entry == NULL) {
@@ -232,7 +234,7 @@ new_position_count_list(const Board *board)
     head->hash_value = board->weak_hash_value;
     head->to_move = board->to_move;
     head->castling_rights = encode_castling_rights(board);
-    if(board->EnPassant) {
+    if(board->EnPassant && ! ep_is_redundant(board)) {
         head->ep_rank = board->ep_rank;
         head->ep_col = board->ep_col;
     }

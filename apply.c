@@ -2817,44 +2817,7 @@ build_basic_EPD_string(const Board *board, char *epd)
         /* It might be required to suppress redundant ep info. */
         Boolean suppress = FALSE;
         if (GlobalState.suppress_redundant_ep_info) {
-            /* Determine whether the ep indication is redundant or not.
-             * Assume that it is unless there is a pawn in position to
-             * take advantage of it.
-             */
-            Boolean redundant = TRUE;
-            Col ep_col = board->ep_col;
-            Rank from_rank;
-            Piece pawn;
-            if (board->to_move == WHITE) {
-                /* White pawn on the fifth rank capturing a black pawn. */
-                from_rank = '5';
-                pawn = W(PAWN);
-            }
-            else {
-                /* Black pawn on the fourth rank capturing a white pawn. */
-                from_rank = '4';
-                pawn = B(PAWN);
-            }
-            if ((ep_col > FIRSTCOL) && (board->board[RankConvert(from_rank)][ColConvert(ep_col - 1)] == pawn)) {
-                /* Check that the move does not leave the king in check. */
-                Board copy_board = *board;
-                make_move(UNKNOWN_MOVE, ep_col - 1, from_rank,
-                        board->ep_col, board->ep_rank, PAWN, board->to_move, &copy_board);
-                if (king_is_in_check(&copy_board, copy_board.to_move) == NOCHECK) {
-                    redundant = FALSE;
-                }
-            }
-            if (redundant && (ep_col < LASTCOL) &&
-                    (board->board[RankConvert(from_rank)][ColConvert(ep_col + 1)] == pawn)) {
-                /* Check that the move does not leave the king in check. */
-                Board copy_board = *board;
-                make_move(UNKNOWN_MOVE, ep_col + 1, from_rank,
-                        board->ep_col, board->ep_rank, PAWN, board->to_move, &copy_board);
-                if (king_is_in_check(&copy_board, copy_board.to_move) == NOCHECK) {
-                    redundant = FALSE;
-                }
-            }
-            suppress = redundant;
+            suppress = ep_is_redundant(board);
         }
         if (suppress) {
             epd[ix] = '-';
@@ -2872,6 +2835,49 @@ build_basic_EPD_string(const Board *board, char *epd)
         ix++;
     }
     epd[ix] = '\0';
+}
+
+/* Determine whether the ep indication is redundant or not.
+ * Assume that it is unless there is a pawn in position to
+ * take advantage of it.
+ */
+Boolean
+ep_is_redundant(const Board *board)
+{
+    Boolean redundant = TRUE;
+    Col ep_col = board->ep_col;
+    Rank from_rank;
+    Piece pawn;
+    if (board->to_move == WHITE) {
+        /* White pawn on the fifth rank capturing a black pawn. */
+        from_rank = '5';
+        pawn = W(PAWN);
+    }
+    else {
+        /* Black pawn on the fourth rank capturing a white pawn. */
+        from_rank = '4';
+        pawn = B(PAWN);
+    }
+    if ((ep_col > FIRSTCOL) && (board->board[RankConvert(from_rank)][ColConvert(ep_col - 1)] == pawn)) {
+        /* Check that the move does not leave the king in check. */
+        Board copy_board = *board;
+        make_move(UNKNOWN_MOVE, ep_col - 1, from_rank,
+                board->ep_col, board->ep_rank, PAWN, board->to_move, &copy_board);
+        if (king_is_in_check(&copy_board, copy_board.to_move) == NOCHECK) {
+            redundant = FALSE;
+        }
+    }
+    if (redundant && (ep_col < LASTCOL) &&
+            (board->board[RankConvert(from_rank)][ColConvert(ep_col + 1)] == pawn)) {
+        /* Check that the move does not leave the king in check. */
+        Board copy_board = *board;
+        make_move(UNKNOWN_MOVE, ep_col + 1, from_rank,
+                board->ep_col, board->ep_rank, PAWN, board->to_move, &copy_board);
+        if (king_is_in_check(&copy_board, copy_board.to_move) == NOCHECK) {
+            redundant = FALSE;
+        }
+    }
+    return redundant;
 }
 
 /* Build and return a FEN string for the given board. */

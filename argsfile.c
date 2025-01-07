@@ -41,7 +41,7 @@
 #include "mymalloc.h"
 #include "fenmatcher.h"
 
-#define CURRENT_VERSION "v24-16"
+#define CURRENT_VERSION "v25-01"
 #define URL "https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/"
 
 /* The prefix of the arguments allowed in an argsfile.

@@ -92,7 +92,7 @@ grammar.o : grammar.c bool.h defs.h typedef.h lex.h taglist.h map.h lists.h\
 	$(CC) $(CFLAGS) grammar.c
 
 hashing.o : hashing.c hashing.h bool.h defs.h typedef.h tokens.h\
-		taglist.h lex.h mymalloc.h zobrist.h
+		taglist.h lex.h mymalloc.h zobrist.h apply.h
 	$(CC) $(CFLAGS) hashing.c
 
 lex.o : lex.c bool.h defs.h typedef.h tokens.h taglist.h map.h\

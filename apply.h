@@ -30,6 +30,7 @@ void build_basic_EPD_string(const Board *board,char *fen);
 char coloured_piece_to_SAN_letter(Piece coloured_piece);
 Piece convert_FEN_char_to_piece(char c);
 CommentList *create_match_comment(const Board *board);
+Boolean ep_is_redundant(const Board *board);
 void free_board(Board *board);
 char *get_FEN_string(const Board *board);
 Board *new_fen_board(const char *fen);
