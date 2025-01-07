@@ -1,5 +1,5 @@
 # Makefile to run a battery of tests of the basic functionality of pgn-extract.
-# Copyright (C) David J. Barnes, 2013-2024
+# Copyright (C) David J. Barnes, 2013-2025
 #
 # Each test is run and then, where relevant, a comparison is made between
 # the output files generated in the current directory and the 'oracle'
