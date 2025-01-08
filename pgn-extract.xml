@@ -7,6 +7,19 @@
   <description>A Portable Game Notation (PGN) manipulator</description>
 
   <item>
+    <title>Version 25-01</title>
+    <link>https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract-25-01.tgz</link>
+    <description>C source code for version 25-01.
+    64-bit windows binary available from the home page.
+    New in this version: bug fix for repetition detection; find games played
+    at odds; find games whether the winner is either the higher or lower rated
+    player; extend -v to match move sequences anywhere in a game.
+    </description>
+    <guid isPermaLink="false">pgn-extract-25-01-announce</guid>
+    <pubDate>08 Jan 2025 20:00:00 GMT</pubDate>
+  </item>
+
+  <item>
     <title>Version 24-10</title>
     <link>https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract-24-10.tgz</link>
     <description>C source code for version 24-10.

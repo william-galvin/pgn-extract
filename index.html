@@ -19,7 +19,7 @@
   <div id="banner-wrapper">
     <div id="banner">
 <h1 align="center">pgn-extract:<br />A Portable Game Notation (PGN) Manipulator for Chess Games<br />
-Version 24-11 by <a href="https://www.cs.kent.ac.uk/~djb/">David J. Barnes</a>
+Version 25-01 by <a href="https://www.cs.kent.ac.uk/~djb/">David J. Barnes</a>
 (<a href="https://twitter.com/kentdjb">@kentdjb</a>)<br />
 <a href="pgn-extract.xml">
 <img alt="RSS feed image" src="feed.png" width="25" height="25"></a>
@@ -42,7 +42,7 @@ with the sources.
 
 <p>Here you can find the C source code and Windows binaries for the current
 version.
-pgn-extract compiles and runs under Windows, Linux and Mac OS X.
+pgn-extract compiles and runs under Windows, Linux and macOS.
 This program is made available under the terms of the
 <a href="https://www.cs.kent.ac.uk/~djb/pgn-extract/COPYING">GNU
 General Public License (Version 3).</a>
@@ -62,7 +62,7 @@ The criteria include:
 <li><p>fuzzy board position;</p></li>
 <li><p>and material balance in the ending.</p></li>
 </ul>
-<p>Over the on-going 20+ year course of its development, it has also added
+<p>Over the on-going 30+ year course of its development, it has also added
 lots of features for controlling what is output (e.g., different
 algebraic formats, EPD, no move numbers, restricting game length, etc.)
 
@@ -89,28 +89,24 @@ This also makes it suitable for bulk processing very large collections of games
 <p>Use the <em>--help</em> argument to the program to
 get the full lists of arguments.
 
-<h2>New in recent versions</h2>
-<p>These are the main changes in the most recent version:
+<h2>Most recent changes</h2>
+<p>These are the main changes in this version:
 <ul>
-  <li><p>A bug fix for material matches with Chess960 games involving castling.
-  <li><p>A bug fix for -n when used with tag matching.
-  <li><p>A bug fix for tag matching with relational operators.
-  <li><p>A bug fix for position matching via -z. Games with FEN tags in which black
-  was to move had colours swapped when matching.
-  <li><p>New options --commented, --insufficient and --suppressmatched.
-  <li><p>Added stdout as an output for -n.
-  <li><p>EloDiff pseudo-tag added.
-  <li><p>Relational operator available for non-numeric tag values.
+    <li><p>bug fix for repetition detection (--repetition);
+    <li><p>find games whether the winner is either the higher or lower rated player (--lowerratedwinner and
+    --higherratedwinner);
+    <li><p>extend -v to match move sequences anywhere in a game, not just at the start (--vanywhere);
+    <li><p>find games played at odds (--odds).
 </ul>
 
 <h2>Available Files</h2>
 <p>You can take a copy of the full source and
 documentation as either
 <a
-href="https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract-24-11.tgz">pgn-extract-24-11.tgz</a> 
+href="https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract-25-01.tgz">pgn-extract-25-01.tgz</a> 
 or
 <a
-href="https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract-24-11.zip">pgn-extract-24-11.zip</a>.
+href="https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract-25-01.zip">pgn-extract-25-01.zip</a>.
 Alternatively, a Windows
 <a href="https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract.exe">64-bit binary</a> is also available.
 </p>
@@ -124,28 +120,29 @@ Alternatively, a Windows
 
     <tr valign="top">
     <td><a
-    href="https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract-24-11.tgz">pgn-extract-24-11.tgz</a><br>
+    href="https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract-25-01.tgz">pgn-extract-25-01.tgz</a><br>
     <td>GZipped tar file
     of the complete source of the latest version of the program.<br>
     Includes <a href="https://www.cs.kent.ac.uk/~djb/pgn-extract/help.html">usage documentation</a>,
     Makefile for compilation and
     <a href="https://www.cs.kent.ac.uk/~djb/pgn-extract/eco.pgn">eco.pgn</a> file for ECO classification.</td>
-    <td align="right">468K bytes &nbsp;</td><td>09 Jul 2024</td>
+    <td align="right">498K bytes &nbsp;</td><td>08 Jan 2025</td>
     </tr>
 
     <tr valign="top">
     <td><a
-    href="https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract-24-11.zip">pgn-extract-24-11.zip</a></td>
+    href="https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract-25-01.zip">pgn-extract-25-01.zip</a></td>
     <td>Zipped file of the complete source of the latest version of the program.<br>
     Includes <a href="https://www.cs.kent.ac.uk/~djb/pgn-extract/help.html">usage documentation</a>, Makefile for compilation and
     <a href="https://www.cs.kent.ac.uk/~djb/pgn-extract/eco.pgn">eco.pgn</a> file for ECO classification.</td>
-    <td align="right">603K bytes &nbsp;</td><td>09 Jul 2024</td>
+    <td align="right">641K bytes &nbsp;</td><td>08 Jan 2025</td>
     </tr>
 
     <tr>
     <td><a href="https://www.cs.kent.ac.uk/~djb/pgn-extract/pgn-extract.exe">pgn-extract.exe</a></td>
     <td>Windows 64-bit binary of the latest version of the program.</td>
-    <td align="right">2.4M bytes &nbsp;</td><td>09 Jul 2024</td>
+    <td>2.4M bytes</td>
+    <td>08 Jan 2025</td>
     </tr>
 
     <tr>
@@ -201,7 +198,7 @@ promise to undertake significant development work.
 <a href="https://www.cs.kent.ac.uk/~djb/">My home page</a> at the University of Kent.<br />
 <a href="mailto:d.j.barnes @ kent.ac.uk">d.j.barnes @ kent.ac.uk</a><br />
 <a href="https://x.com/kentdjb">@kentdjb</a><br />
-Last updated: 14th July 2024: version 24-11 released.<br />
+Last updated: 8th January 2025: version 25-01 released.<br />
 </p>
 </address>
   </div>
