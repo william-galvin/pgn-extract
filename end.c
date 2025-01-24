@@ -767,7 +767,6 @@ look_for_number_of_pieces(Game *game_details, unsigned target_number_of_pieces)
             game_ok = FALSE;
         }
     }
-    (void) free((void *) board);
     if(game_ok && matches) {
         if (GlobalState.add_position_match_comments) {
             add_match_comment(game_details, board, move_for_comment);
@@ -775,6 +774,7 @@ look_for_number_of_pieces(Game *game_details, unsigned target_number_of_pieces)
         return TRUE;
     }
     else {
+        (void) free((void *) board);
         return FALSE;
     }
 }
