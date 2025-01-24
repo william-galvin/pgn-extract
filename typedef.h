@@ -345,6 +345,8 @@ typedef struct {
     unsigned check_for_repetition;
     /* Check for N-move draw games if check > 0. */
     unsigned check_for_N_move_rule;
+    /* Number of pieces to look for in a piece-count match. */
+    unsigned piece_count;
     
     /* Whether to output a FEN string. Either at the end of the game
      * or replacing a matching comment (see FEN_comment_pattern). */

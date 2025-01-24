@@ -51,6 +51,8 @@ static Material_details *endings_to_match = NULL;
 /* Define pseudo-letter for minor pieces, used later. */
 #define MINOR_PIECE 'L'
 
+static void add_match_comment(Game *game_details, const Board *board, Move *move_for_comment);
+static Boolean look_for_number_of_pieces(Game *game_details, unsigned target_number_of_pieces);
 static Boolean opposite_colour_bishops(const Board *board);
 
 static Piece
@@ -595,22 +597,7 @@ look_for_material_match(Game *game_details)
                 matches = TRUE;
                 /* See whether a matching comment is required. */
                 if (GlobalState.add_position_match_comments && !match_comment_added) {
-                    CommentList *match_comment = create_match_comment(board);
-                    if (move_for_comment != NULL) {
-                        append_comments_to_move(move_for_comment, match_comment);
-                    }
-                    else {
-                        if(game_details->prefix_comment == NULL) {
-                            game_details->prefix_comment = match_comment;
-                        }
-                        else {
-                            CommentList *comm = game_details->prefix_comment;
-                            while(comm->next != NULL) {
-                                comm = comm->next;
-                            }
-                            comm->next = match_comment;
-                        }
-                    }
+                    add_match_comment(game_details, board, move_for_comment);
                 }
             }
         }
@@ -678,6 +665,21 @@ check_for_material_match(Game *game)
     }
 }
 
+/* Check to see whether the given moves lead to a position
+ * with the required number of pieces.
+ */
+Boolean
+check_for_piece_count_match(Game *game)
+{
+    /* Match if there are no endings to match. */
+    if(GlobalState.piece_count > 0) {
+        return look_for_number_of_pieces(game, GlobalState.piece_count);
+    }
+    else {
+        return TRUE;
+    }
+}
+
 /* Does the board's material match the constraints of details_to_find?
  * Return TRUE if it does, FALSE otherwise.
  */
@@ -701,6 +703,80 @@ constraint_material_match(Material_details *details_to_find, const Board *board)
         black_matches = FALSE;
     }
     return white_matches || black_matches;
+}
+
+/* Check to see whether the game reaches a point where there
+ * exactly the given number of pieces (including kings).
+ */
+static Boolean
+look_for_number_of_pieces(Game *game_details, unsigned target_number_of_pieces)
+{
+    Boolean game_ok = TRUE;
+    Move *next_move = game_details->moves;
+    Move *move_for_comment = NULL;
+    Colour colour = WHITE;
+    /* The initial game position has the full set of piece details. */
+    int num_pieces[2][NUM_PIECE_VALUES] = {
+        /* Dummies for OFF and EMPTY at the start. */
+        /*     P  N  B  R  Q  K */
+        {0, 0, 8, 2, 2, 2, 1, 1},
+        {0, 0, 8, 2, 2, 2, 1, 1}
+    };
+    Board *board = new_game_board(game_details->tags[FEN_TAG]);
+
+    if(game_details->tags[FEN_TAG] != NULL) {
+        extract_pieces_from_board(num_pieces, board);
+        colour = board->to_move;
+    }
+
+    unsigned piece_count = 0;
+    for(int n = 0; n < NUM_PIECE_VALUES; n++) {
+        piece_count += num_pieces[0][n] + num_pieces[1][n];
+    }
+
+    /* Keep going while the game is ok, and we have some more
+     * moves without finding a match.
+     */
+    Boolean matches = FALSE;
+    if(piece_count == target_number_of_pieces) {
+        matches = TRUE;
+    }
+    while (game_ok && ! matches && next_move != NULL) {
+        if (*(next_move->move) != '\0') {
+            /* Try the next position. */
+            if (apply_move(next_move, board)) {
+                /* Remove any captured pieces. */
+                if (next_move->captured_piece != EMPTY) {
+                    piece_count--;
+                    if(piece_count == target_number_of_pieces) {
+                        matches = TRUE;
+                        move_for_comment = next_move;
+                    }
+                }
+                colour = OPPOSITE_COLOUR(colour);
+                next_move = next_move->next;
+            }
+            else {
+                game_ok = FALSE;
+            }
+        }
+        else {
+            /* An empty move. */
+            fprintf(GlobalState.logfile,
+                    "Internal error: Empty move in look_for_number_of_pieces.\n");
+            game_ok = FALSE;
+        }
+    }
+    (void) free((void *) board);
+    if(game_ok && matches) {
+        if (GlobalState.add_position_match_comments) {
+            add_match_comment(game_details, board, move_for_comment);
+        }
+        return TRUE;
+    }
+    else {
+        return FALSE;
+    }
 }
 
 /* Decompose the text of line to extract two sets of
@@ -837,5 +913,30 @@ opposite_colour_bishops(const Board *board)
     else {
         /* Check for odd parity. */
         return (abs(r1 - r2) + abs(c1 - c2)) % 2 == 1;
+    }
+}
+
+/*
+ * Add a comment documenting a match to the given move_for_comment.
+ * If there is no move, add it as a prefix comment to the game.
+ */
+static void
+add_match_comment(Game *game_details, const Board *board, Move *move_for_comment)
+{
+    CommentList *match_comment = create_match_comment(board);
+    if (move_for_comment != NULL) {
+        append_comments_to_move(move_for_comment, match_comment);
+    }
+    else {
+        if(game_details->prefix_comment == NULL) {
+            game_details->prefix_comment = match_comment;
+        }
+        else {
+            CommentList *comm = game_details->prefix_comment;
+            while(comm->next != NULL) {
+                comm = comm->next;
+            }
+            comm->next = match_comment;
+        }
     }
 }

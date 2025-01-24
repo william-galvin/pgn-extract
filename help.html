@@ -18,7 +18,7 @@
   <div id="banner">
 <h1><a href="https://www.cs.kent.ac.uk/~djb/pgn-extract">pgn-extract</a>:<br />
 A Portable Game Notation (PGN) Manipulator for Chess Games<br />
-Version 25-01 by
+Version 25-02 by
 <a href="https://www.cs.kent.ac.uk/~djb/">David J. Barnes</a></h1>
   </div>
 </div>
@@ -121,7 +121,7 @@ the binary working, there is <a href="https://www.cs.kent.ac.uk/~djb/pgn-extract
             <a href="#insufficient">insufficient mating material (--insufficient)</a>
 	    </ul>
         <li><a href="#commented">Only match games with at least one comment (--commented)</a>
-	<li><a href="#-z">Material matches (-y, -z, --materialy, --materialz and --addmatchtag)</a>
+	<li><a href="#-z">Material matches (--piececount, -y, -z, --materialy, --materialz and --addmatchtag)</a>
         <li><a href="#odds>Match games played at odds (--odds)</a>
         <li><a href="#-n">Output games not matched (-n)</a>
 	</ul>
@@ -387,6 +387,7 @@ of this page before attempting to use pgn-extract in earnest.
       <li>--onlysetuptags - only match games with a SetUp tag.
       <li>--output - write matched games to an output file
             (see <a href="#output">-a</a>).
+      <li>--piececount N - match games that reach a position with N pieces.
       <li>--plycount - output a PlyCount tag.
       <li>--plylimit N - limit the number of plies output (default no limit).
       <li>--quiescent N - position quiescence length (default 0)",
@@ -1977,7 +1978,16 @@ is required to output a FEN string.
 <p>See <a href="#fencomments">--fencomments</a> for the option to add
 a FEN comment after every move, including the final one.
 
-<h2 id="-z">Material matches (-y, -z, --materialy, --materialz and --addmatchtag)</h2>
+<h2 id="-z">Material matches (--piececount, -y, -z, --materialy, --materialz and --addmatchtag)</h2>
+<p>The --piececount option is followed by a positive integer indicating the total number of pieces
+(including kings) to match. A game is matched if it reaches a position in which there are exactly
+that number of pieces. For instance:
+<pre>
+pgn-extract --piececount 7 --markmatches SEVEN games.pgn --output seven.pgn
+</pre>
+<p>would match all games in games.pgn that reach a position with 7 pieces, and mark the position
+at which that point arises with SEVEN in a comment.
+
 <p>The -y and -z flags take a filename of material balances for which you
 wish to search in games.
 The --materialy and --materialz arguments offer command-line alternatives to
@@ -2515,8 +2525,8 @@ or via
 <p>Copyright (C) 1994-2025 David J. Barnes<br />
 <a href="mailto:d.j.barnes@kent.ac.uk">d.j.barnes@kent.ac.uk</a><br />
 <a href="https://www.cs.kent.ac.uk/~djb/">https://www.cs.kent.ac.uk/~djb/</a><br />
-Date of this version: 7th January 2025<br>
-Version Number: 25-01<br>
+Date of this version: 24th January 2025<br>
+Version Number: 25-02<br>
 </address>
   </div>
 </div>

@@ -114,6 +114,7 @@ StateInfo GlobalState = {
     1,                  /* startply (--startply) */
     0,                  /* check_for_repetition (--repetition) */
     0,                  /* check_for_N_move_rule (--fifty, --seventyfive) */
+    0,                  /* piece_count (--piececount) */
     FALSE,              /* output_FEN_string */
     FALSE,              /* add_FEN_comments (--fencomments) */
     FALSE,              /* add_hashcode_comments (--hashcomments) */

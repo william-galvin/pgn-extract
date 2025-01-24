@@ -41,7 +41,7 @@
 #include "mymalloc.h"
 #include "fenmatcher.h"
 
-#define CURRENT_VERSION "v25-01"
+#define CURRENT_VERSION "v25-02"
 #define URL "https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/"
 
 /* The prefix of the arguments allowed in an argsfile.
@@ -254,6 +254,7 @@ usage_and_exit(void)
         "--odds - only match games played at odds.",
         "--onlysetuptags - only match games with a SetUp tag.",
         "--output - see -o",
+        "--piececount N - match games that reach a position with N pieces.",
         "--plycount - include a PlyCount tag.",
         "--plylimit - limit the number of plies output.",
         "--quiescent N - position quiescence length (default 0)",
@@ -1545,6 +1546,27 @@ process_long_form_argument(const char *argument, const char *associated_value)
             else {
                 fprintf(GlobalState.logfile,
                         "--%s requires a number greater than or equal to zero.\n", argument);
+                exit(1);
+            }
+        }
+        else {
+            fprintf(GlobalState.logfile,
+                    "--%s requires a number following it.\n", argument);
+            exit(1);
+        }
+        return 2;
+    }
+    else if (stringcompare(argument, "piececount") == 0) {
+        int count = 0;
+
+        /* Extract the count. */
+        if (sscanf(associated_value, "%d", &count) == 1) {
+            if (count >= 2) {
+                GlobalState.piece_count = count;
+            }
+            else {
+                fprintf(GlobalState.logfile,
+                        "--%s requires a number greater than or equal to 2.\n", argument);
                 exit(1);
             }
         }

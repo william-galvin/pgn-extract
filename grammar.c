@@ -1210,20 +1210,21 @@ deal_with_game(Move *move_list, unsigned long start_line, unsigned long end_line
      * been checked.
      */
     if (consistent_FEN_tags(&current_game) &&
-        check_tag_details_not_ECO(current_game.tags, current_game.tags_length, TRUE) &&
-        check_setup_tag(current_game.tags) &&
-        check_duplicate_setup(&current_game) &&
+            check_tag_details_not_ECO(current_game.tags, current_game.tags_length, TRUE) &&
+            check_setup_tag(current_game.tags) &&
+            check_duplicate_setup(&current_game) &&
 
-        apply_move_list(&current_game, &plycount, GlobalState.depth_of_positional_search, TRUE) &&
+            apply_move_list(&current_game, &plycount, GlobalState.depth_of_positional_search, TRUE) &&
 
-        check_move_bounds(plycount) &&
-        check_for_odds(&current_game) &&
-        check_textual_variations(&current_game) &&
-        check_for_material_match(&current_game) &&
-        check_for_only_checkmate(&current_game) &&
-        check_for_only_repetition(current_game.position_counts) &&
-        check_ECO_tag(current_game.tags, TRUE) &&
-        check_for_comments(&current_game)) {
+            check_move_bounds(plycount) &&
+            check_for_odds(&current_game) &&
+            check_textual_variations(&current_game) &&
+            check_for_material_match(&current_game) &&
+            check_for_piece_count_match(&current_game) &&
+            check_for_only_checkmate(&current_game) &&
+            check_for_only_repetition(current_game.position_counts) &&
+            check_ECO_tag(current_game.tags, TRUE) &&
+            check_for_comments(&current_game)) {
         /* If there is no original filename then the game is not a
          * duplicate.
          */
