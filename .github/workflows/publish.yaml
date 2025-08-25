@@ -23,15 +23,20 @@ jobs:
           - os: linux-x86_64
             runs-on: ubuntu-latest
             arch: x86_64
+            plat: linux_x86_64
           - os: linux-aarch64
             runs-on: ubuntu-latest
             arch: aarch64
+            plat: linux_aarch64
           - os: macos-x86_64
             runs-on: macos-13
             arch: x86_64
+            plat: macos_x86_64
           - os: macos-aarch64
             runs-on: macos-latest
             arch: arm64
+            plat: macos_arm64    
+
     steps:
       - uses: actions/checkout@v5
 
@@ -47,7 +52,7 @@ jobs:
         run: make 
 
       - name: Build
-        run: uv build --wheel
+        run: uv build --wheel --plat ${{ matrix.plat }}
       
       - name: Upload
         run: TWINE_USERNAME="__token__" TWINE_PASSWORD="${{ secrets.PYPI_TOKEN }}" uvx twine upload --non-interactive --skip-existing dist/*
