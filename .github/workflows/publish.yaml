@@ -43,6 +43,10 @@ jobs:
       - name: Install uv
         run: pip install uv
 
+       
+      - name: Make
+        run: make 
+
       - name: Build
         run: uv build --wheel
 
