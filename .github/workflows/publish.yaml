@@ -1,70 +1,76 @@
-name: CI
+name: Build and Publish PyPI
 
 on:
   push:
     branches:
       - main
+  release:
+    types:
+      - published
+  workflow_dispatch:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  linux:
-    runs-on: ${{ matrix.platform.runner }}
+  build:
+    name: Build wheels and sdist on ${{ matrix.os }}
+    runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
-        platform:
-          - runner: ubuntu-latest
-            target: x86_64
-          - runner: ubuntu-latest
-            target: aarch64
+        include:
+          - os: linux-x86_64
+            runs-on: ubuntu-latest
+            arch: x86_64
+          - os: linux-aarch64
+            runs-on: ubuntu-latest
+            arch: aarch64
+          - os: macos-x86_64
+            runs-on: macos-13
+            arch: x86_64
+          - os: macos-aarch64
+            runs-on: macos-latest
+            arch: arm64
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: 3.x
+
       - name: Install uv
-        run: python -m pip install --upgrade pip uv
+        run: pip install uv
+
       - name: Build wheel
-        run: uv build
+        run: uv build --wheel --out dist
+
+      - name: Build sdist
+        run: uv build --sdist --out dist
+
       - uses: actions/upload-artifact@v4
         with:
-          name: wheels-linux-${{ matrix.platform.target }}
-          path: dist
+          name: dist-${{ matrix.os }}
+          path: dist/*
 
-  macos:
-    runs-on: ${{ matrix.platform.runner }}
-    strategy:
-      matrix:
-        platform:
-          - runner: macos-13
-            target: x86_64
-          - runner: macos-14
-            target: aarch64
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-      - name: Install uv
-        run: python -m pip install --upgrade pip uv
-      - name: Build wheel
-        run: uv build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: wheels-macos-${{ matrix.platform.target }}
-          path: dist
-
-  release:
-    name: Release
+  publish_pypi:
+    name: Publish to PyPI
     runs-on: ubuntu-latest
-    needs: [linux, macos]
+    needs: build
+    if: github.event_name == 'release' && github.event.action == 'published'
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
+        with:
+          pattern: 'dist-*'
+          path: dist
+          merge-multiple: true
+
       - name: Install Twine
-        run: python -m pip install --upgrade pip twine
+        run: pip install twine
+
       - name: Publish to PyPI
-        run: twine upload --non-interactive --skip-existing dist/*
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: twine upload --non-interactive --skip-existing dist/*
