@@ -43,11 +43,8 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Build wheel
-        run: uv build --wheel --out dist
-
-      - name: Build sdist
-        run: uv build --sdist --out dist
+      - name: Build
+        run: uv build
 
       - uses: actions/upload-artifact@v4
         with:
